@@ -1,0 +1,262 @@
+
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>TheDroidOg — Developer de Minecraft</title>
+  <meta name="description" content="Portafolio de TheDroidOg, experto en servidores Minecraft, automatización y soluciones escalables." />
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
+  <style>
+    :root{
+      --bg:#0b0b0d;
+      --card:#121216;
+      --text:#e6e6e9;
+      --muted:#a9a9b3;
+      --accent:#e50914;
+      --accent-2:#00e5ff;
+      --border:#1e1e24;
+      --success:#22c55e;
+    }
+    *{box-sizing:border-box}
+    html,body{margin:0;padding:0;background:var(--bg);color:var(--text);font-family:Inter,system-ui,-apple-system,Segoe UI,Roboto,Ubuntu,Cantarell,'Helvetica Neue',Arial,sans-serif}
+    a{text-decoration:none;color:inherit}
+    .container{max-width:1100px;margin:0 auto;padding:24px}
+    header{
+      position:sticky;top:0;z-index:50;
+      background:linear-gradient(180deg, rgba(11,11,13,0.9), rgba(11,11,13,0.7));
+      backdrop-filter: blur(8px);
+      border-bottom:1px solid var(--border);
+    }
+    .nav{
+      display:flex;align-items:center;justify-content:space-between;
+      padding:14px 24px;
+    }
+    .brand{
+      display:flex;align-items:center;gap:12px;font-weight:800;letter-spacing:0.3px
+    }
+    .logo{
+      width:36px;height:36px;border-radius:8px;
+      background:radial-gradient(120% 120% at 20% 20%, var(--accent) 0%, #7a0b11 40%, #2a0a0c 70%, #0b0b0d 100%);
+      box-shadow:0 0 24px rgba(229,9,20,0.35), inset 0 0 12px rgba(0,0,0,0.6);
+    }
+    .brand span{font-size:1.05rem}
+    .actions{display:flex;gap:10px}
+    .btn{
+      display:inline-flex;align-items:center;gap:8px;
+      padding:10px 14px;border:1px solid var(--border);border-radius:10px;
+      background:var(--card);color:var(--text);font-weight:600;transition:all .2s ease;
+    }
+    .btn:hover{transform:translateY(-1px);border-color:#2a2a33}
+    .btn-primary{
+      background:linear-gradient(180deg, #ff1f2a, var(--accent));
+      border-color:#8a0e15;color:white;box-shadow:0 8px 24px rgba(229,9,20,0.25);
+    }
+    .btn-primary:hover{filter:brightness(1.05)}
+    .btn-ghost{background:transparent}
+    .hero{
+      padding:48px 24px 24px;border-bottom:1px solid var(--border);
+      background:
+        radial-gradient(1200px 400px at 10% -10%, rgba(229,9,20,0.12), transparent 60%),
+        radial-gradient(800px 300px at 90% -20%, rgba(0,229,255,0.12), transparent 60%);
+    }
+    .hero-grid{display:grid;grid-template-columns:1.2fr 0.8fr;gap:24px}
+    @media (max-width:900px){.hero-grid{grid-template-columns:1fr}}
+    .title{font-size:2.2rem;font-weight:800;margin:0 0 10px}
+    .subtitle{color:var(--muted);font-size:1rem;line-height:1.6;margin:0 0 18px}
+    .badges{display:flex;flex-wrap:wrap;gap:10px;margin:18px 0}
+    .badge{
+      padding:8px 12px;border:1px solid var(--border);border-radius:999px;
+      background:rgba(255,255,255,0.02);color:var(--text);font-weight:600;font-size:.9rem
+    }
+    .cta{display:flex;gap:12px;margin-top:10px;flex-wrap:wrap}
+    .card{
+      background:linear-gradient(180deg, #121216, #0f0f13);
+      border:1px solid var(--border);border-radius:16px;padding:18px;
+      box-shadow:0 10px 30px rgba(0,0,0,0.35)
+    }
+    .stats{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}
+    @media (max-width:900px){.stats{grid-template-columns:repeat(2,1fr)}}
+    .stat{padding:16px;border-radius:12px;background:#0e0e12;border:1px solid #1a1a22}
+    .stat .num{font-size:1.4rem;font-weight:800;color:white}
+    .stat .label{color:var(--muted);font-weight:600}
+    section{padding:32px 24px;border-bottom:1px solid var(--border)}
+    .section-title{font-size:1.6rem;font-weight:800;margin:0 0 12px}
+    .grid{display:grid;grid-template-columns:repeat(2,1fr);gap:18px}
+    @media (max-width:900px){.grid{grid-template-columns:1fr}}
+    .list{display:grid;gap:10px}
+    .list li{
+      list-style:none;padding:12px;border:1px solid var(--border);border-radius:12px;
+      background:#0f0f13;font-weight:600
+    }
+    .footer{
+      padding:24px;text-align:center;color:var(--muted)
+    }
+    .accent-line{
+      height:2px;background:linear-gradient(90deg, var(--accent), transparent 40%, var(--accent-2) 60%, transparent);
+      border-radius:2px;margin:12px 0 18px
+    }
+    .pill{
+      display:inline-flex;align-items:center;gap:8px;
+      padding:8px 12px;border-radius:999px;background:#0f0f13;border:1px solid var(--border);
+      color:var(--muted);font-weight:600
+    }
+    .success{color:var(--success)}
+  </style>
+</head>
+<body>
+
+  <!-- Header -->
+  <header>
+    <div class="nav container">
+      <div class="brand">
+        <div class="logo" aria-hidden="true"></div>
+        <span>TheDroidOg</span>
+      </div>
+      <div class="actions">
+        <!-- Reemplaza el enlace con tu ID numérico si lo tienes -->
+        <a class="btn btn-ghost" href="https://discord.com/users/TheDroigOG" target="_blank" rel="noopener">Discord</a>
+        <a class="btn btn-primary" href="#portfolio">Ver Portafolio</a>
+      </div>
+    </div>
+  </header>
+
+  <!-- Hero -->
+  <section class="hero">
+    <div class="container hero-grid">
+      <div>
+        <h1 class="title">Experto en servidores Minecraft — soluciones rápidas, seguras y escalables</h1>
+        <p class="subtitle">
+          Soy <strong>TheDroidOg</strong>, desarrollador full‑stack con foco en redes Minecraft, automatización y
+          rendimiento. Diseño infra robusta, plugins a medida y flujos CI/CD que escalan sin perder la experiencia del jugador.
+          Si quieres pruebas o demos, escríbeme en Discord: <strong>@TheDroigOG</strong>.
+        </p>
+        <div class="badges">
+          <span class="badge">Node.js</span>
+          <span class="badge">TypeScript</span>
+          <span class="badge">Java (Paper)</span>
+          <span class="badge">Docker</span>
+          <span class="badge">MySQL</span>
+          <span class="badge">Pterodactyl</span>
+        </div>
+        <div class="cta">
+          <a class="btn btn-primary" href="#portfolio">Ver Portafolio</a>
+          <a class="btn" href="https://discord.com/users/TheDroigOG" target="_blank" rel="noopener">Contactar por Discord</a>
+        </div>
+      </div>
+      <div class="card">
+        <div class="pill">Disponibilidad: <span class="success">Abierta</span></div>
+        <div class="accent-line"></div>
+        <div class="stats">
+          <div class="stat">
+            <div class="num">5+ años</div>
+            <div class="label">Experiencia</div>
+          </div>
+          <div class="stat">
+            <div class="num">45+</div>
+            <div class="label">Proyectos</div>
+          </div>
+          <div class="stat">
+            <div class="num">20+</div>
+            <div class="label">Clientes</div>
+          </div>
+          <div class="stat">
+            <div class="num">10+</div>
+            <div class="label">Colaboraciones</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Portafolio / Bio -->
+  <section id="portfolio">
+    <div class="container">
+      <h2 class="section-title">Bio y experiencia</h2>
+      <div class="accent-line"></div>
+      <div class="grid">
+        <div class="card">
+          <h3 style="margin-top:0">Quién soy</h3>
+          <p class="subtitle">
+            Desarrollador de Minecraft con <strong>5 años</strong> construyendo redes profesionales: arquitectura escalable,
+            optimización de TPS, diseño de plugins y paneles de administración. Me obsesiona la estabilidad, la seguridad y
+            la experiencia del jugador—cada decisión técnica se traduce en retención y comunidad.
+          </p>
+          <ul class="list">
+            <li><strong>Especialidad:</strong> Paper/Spigot, microservicios Node.js, bots de soporte y automatización</li>
+            <li><strong>Infra:</strong> Docker, Pterodactyl, CI/CD, backups y observabilidad</li>
+            <li><strong>Datos:</strong> MySQL, caching, migraciones seguras y analítica</li>
+            <li><strong>Branding técnico:</strong> documentación clara, paneles y UX admin</li>
+          </ul>
+        </div>
+        <div class="card">
+          <h3 style="margin-top:0">Servidores en los que he trabajado</h3>
+          <ul class="list">
+            <li>NexusCraft Network</li>
+            <li>DiosesMC Network</li>
+            <li>Infection Network</li>
+            <li>BladeCraft Network</li>
+            <li>DexlunMC Network</li>
+          </ul>
+          <div class="accent-line"></div>
+          <p class="subtitle">
+            Roles típicos: desarrollo de plugins, integración con paneles, despliegues automatizados, hardening de seguridad,
+            y soporte de incidentes con tiempos de respuesta bajos.
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Servicios -->
+  <section>
+    <div class="container">
+      <h2 class="section-title">Servicios</h2>
+      <div class="accent-line"></div>
+      <div class="grid">
+        <div class="card">
+          <h3 style="margin-top:0">Plugins y gameplay</h3>
+          <ul class="list">
+            <li>Diseño de sistemas: economía, rangos, misiones, eventos</li>
+            <li>Optimización de rendimiento y reducción de lag</li>
+            <li>Integraciones con APIs y paneles</li>
+          </ul>
+        </div>
+        <div class="card">
+          <h3 style="margin-top:0">Infra y automatización</h3>
+          <ul class="list">
+            <li>Orquestación con Docker y Pterodactyl</li>
+            <li>CI/CD, backups y monitoreo</li>
+            <li>Seguridad, permisos y auditorías</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Contacto -->
+  <section>
+    <div class="container">
+      <h2 class="section-title">Contacto</h2>
+      <div class="accent-line"></div>
+      <p class="subtitle">
+        ¿Quieres ver demos, código o referencias? Escríbeme en Discord y te comparto pruebas y casos reales.
+      </p>
+      <div class="cta">
+        <a class="btn btn-primary" href="https://discord.gg/rkF9qTdUq" target="_blank" rel="noopener">Abrir Discord</a>
+        <a class="btn" href="#portfolio">Ver Portafolio</a>
+      </div>
+    </div>
+  </section>
+
+  <footer class="footer">
+    © <span id="year"></span> TheDroidOg — Minecraft Developer
+  </footer>
+
+  <script>
+    document.getElementById('year').textContent = new Date().getFullYear();
+  </script>
+</body>
+</html>
