@@ -1,0 +1,672 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>71x7. | Systems Architect & Core Developer</title>
+    <!-- FontAwesome Logos & Enterprise Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;600&family=Poppins:wght@400;600;700;900&display=swap" rel="stylesheet">
+    
+    <style>
+        :root {
+            --bg-primary: #08080a;
+            --bg-secondary: #0f0f14;
+            --bg-card: #14141c;
+            --accent: #ff3333; 
+            --accent-rgb: 255, 51, 51;
+            --text-main: #f5f5f7;
+            --text-muted: #9898a0;
+            --panel-border: rgba(255, 255, 255, 0.06);
+            --glow: rgba(255, 51, 51, 0.18);
+            --font-sans: 'Poppins', sans-serif;
+            --font-mono: 'Fira Code', monospace;
+        }
+
+        body.theme-red {
+            --accent: #ff3333;
+            --accent-rgb: 255, 51, 51;
+            --glow: rgba(255, 51, 51, 0.22);
+        }
+        body.theme-blue {
+            --accent: #0066ff;
+            --accent-rgb: 0, 102, 255;
+            --glow: rgba(0, 102, 255, 0.25);
+        }
+        body.theme-black {
+            --accent: #ffffff;
+            --accent-rgb: 255, 255, 255;
+            --glow: rgba(255, 255, 255, 0.12);
+            --text-muted: #a0a0a8;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            scroll-behavior: smooth;
+        }
+
+        body {
+            background-color: var(--bg-primary);
+            color: var(--text-main);
+            font-family: var(--font-sans);
+            overflow-x: hidden;
+            line-height: 1.6;
+        }
+
+        .cyber-bg {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            z-index: -2;
+            background: radial-gradient(circle at 50% 50%, rgba(15, 15, 20, 0.4) 0%, var(--bg-primary) 100%);
+            background-image: 
+                linear-gradient(rgba(255,255,255,0.008) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(255,255,255,0.008) 1px, transparent 1px);
+            background-size: 50px 50px;
+        }
+
+        .cyber-glow {
+            position: fixed;
+            width: 700px;
+            height: 700px;
+            background: radial-gradient(circle, var(--glow) 0%, rgba(0,0,0,0) 70%);
+            top: 0;
+            left: 0;
+            z-index: -1;
+            pointer-events: none;
+            transition: background 0.4s cubic-bezier(0.25, 1, 0.5, 1);
+        }
+
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: var(--bg-primary); }
+        ::-webkit-scrollbar-thumb { background: var(--panel-border); border-radius: 4px; }
+        ::-webkit-scrollbar-thumb:hover { background: var(--accent); }
+
+        .control-panel {
+            position: fixed;
+            top: 24px;
+            right: 24px;
+            z-index: 1000;
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            background: rgba(15, 15, 20, 0.75);
+            padding: 10px 20px;
+            border-radius: 30px;
+            border: 1px solid var(--panel-border);
+            backdrop-filter: blur(16px);
+            box-shadow: 0 10px 40px rgba(0,0,0,0.4);
+        }
+
+        .control-group { display: flex; align-items: center; gap: 10px; }
+
+        .theme-btn {
+            width: 18px;
+            height: 18px;
+            border-radius: 50%;
+            border: 2px solid transparent;
+            cursor: pointer;
+            transition: transform 0.2s, border-color 0.2s;
+        }
+        .theme-btn:hover { transform: scale(1.25); }
+        .theme-btn.red { background: #ff3333; }
+        .theme-btn.blue { background: #0066ff; }
+        .theme-btn.black { background: #ffffff; }
+        .theme-btn.active { border-color: var(--text-main); }
+
+        .lang-select {
+            background: transparent;
+            color: var(--text-main);
+            border: none;
+            font-family: var(--font-mono);
+            font-size: 0.85rem;
+            font-weight: 600;
+            cursor: pointer;
+            outline: none;
+        }
+        .lang-select option { background: var(--bg-secondary); color: #fff; }
+
+        header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 90px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 60px;
+            z-index: 900;
+            background: linear-gradient(to bottom, var(--bg-primary) 50%, transparent);
+        }
+
+        .logo {
+            font-family: var(--font-mono);
+            font-size: 1.8rem;
+            font-weight: 900;
+            color: var(--text-main);
+            text-decoration: none;
+            letter-spacing: -1px;
+        }
+        .logo span { color: var(--accent); text-shadow: 0 0 15px var(--accent); }
+
+        nav { display: flex; gap: 35px; margin-right: 340px; }
+        nav a {
+            color: var(--text-muted);
+            text-decoration: none;
+            font-size: 0.9rem;
+            font-weight: 600;
+            letter-spacing: 0.5px;
+            transition: color 0.3s;
+        }
+        nav a:hover, nav a.active { color: var(--accent); }
+
+        section {
+            min-height: 100vh;
+            padding: 140px 60px 80px 60px;
+            max-width: 1440px;
+            margin: 0 auto;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        .hero-container {
+            display: grid;
+            grid-template-columns: 1.25fr 0.75fr;
+            gap: 60px;
+            align-items: center;
+        }
+
+        .hero-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            background: rgba(var(--accent-rgb), 0.08);
+            border: 1px solid rgba(var(--accent-rgb), 0.25);
+            color: var(--accent);
+            padding: 6px 16px;
+            border-radius: 20px;
+            font-family: var(--font-mono);
+            font-size: 0.85rem;
+            font-weight: 600;
+            margin-bottom: 24px;
+        }
+
+        .hero-title {
+            font-size: 4.2rem;
+            line-height: 1.05;
+            font-weight: 900;
+            margin-bottom: 24px;
+            letter-spacing: -2px;
+        }
+        .hero-title span { color: var(--accent); text-shadow: 0 0 30px var(--glow); }
+
+        .hero-desc {
+            font-size: 1.15rem;
+            color: var(--text-muted);
+            max-width: 720px;
+            margin-bottom: 40px;
+        }
+
+        .counter-widget {
+            background: var(--bg-secondary);
+            border: 1px solid var(--panel-border);
+            border-radius: 24px;
+            padding: 32px;
+            box-shadow: 0 20px 50px rgba(0,0,0,0.5);
+            position: relative;
+            overflow: hidden;
+        }
+        .counter-widget::before {
+            content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 3px; background: linear-gradient(90deg, transparent, var(--accent), transparent);
+        }
+        .counter-title {
+            font-family: var(--font-mono);
+            font-size: 0.85rem;
+            color: var(--text-muted);
+            margin-bottom: 20px;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            text-align: center;
+        }
+        .counter-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; text-align: center; }
+        .counter-block .num {
+            font-family: var(--font-mono);
+            font-size: 2.2rem;
+            font-weight: 700;
+            color: var(--text-main);
+        }
+        .counter-block .lbl { font-size: 0.75rem; color: var(--text-muted); font-weight: 600; text-transform: uppercase; margin-top: 4px; }
+
+        .section-header { margin-bottom: 60px; }
+        .section-header p { color: var(--accent); font-family: var(--font-mono); font-size: 0.85rem; font-weight: 600; letter-spacing: 2px; text-transform: uppercase; margin-bottom: 8px; }
+        .section-header h2 { font-size: 2.8rem; font-weight: 900; letter-spacing: -1px; }
+        .section-header h2 span { color: var(--accent); }
+
+        .capabilities-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(340px, 1fr));
+            gap: 24px;
+            margin-bottom: 60px;
+        }
+        .capability-card {
+            background: var(--bg-card);
+            border: 1px solid var(--panel-border);
+            border-radius: 20px;
+            padding: 35px;
+            transition: transform 0.3s, border-color 0.3s, box-shadow 0.3s;
+        }
+        .capability-card:hover {
+            transform: translateY(-5px);
+            border-color: var(--accent);
+            box-shadow: 0 15px 40px rgba(0,0,0,0.6), 0 0 20px var(--glow);
+        }
+        .cap-icon {
+            width: 60px; height: 60px; background: rgba(255,255,255,0.02); border: 1px solid var(--panel-border);
+            border-radius: 14px; display: flex; align-items: center; justify-content: center;
+            font-size: 1.6rem; color: var(--accent); margin-bottom: 24px;
+        }
+        .capability-card h3 { font-size: 1.35rem; font-weight: 700; margin-bottom: 12px; }
+        .capability-card p { color: var(--text-muted); font-size: 0.95rem; }
+
+        .network-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(290px, 1fr));
+            gap: 20px;
+        }
+        .network-card {
+            background: var(--bg-secondary);
+            border: 1px solid var(--panel-border);
+            border-radius: 16px;
+            padding: 28px;
+            transition: all 0.3s ease;
+        }
+        .network-card:hover {
+            border-color: var(--accent);
+            background: var(--bg-card);
+            transform: translateY(-2px);
+        }
+        .card-top { display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; }
+        .server-icon-wrapper { color: var(--accent); font-size: 1.3rem; }
+        .role-badge { font-family: var(--font-mono); font-size: 0.7rem; padding: 4px 10px; border-radius: 6px; font-weight: 700; text-transform: uppercase; }
+        .role-dev { background: rgba(0, 102, 255, 0.12); color: #0066ff; border: 1px solid rgba(0,102,255,0.25); }
+        .role-owner { background: rgba(255, 145, 0, 0.12); color: #ff9100; border: 1px solid rgba(255,145,0,0.25); }
+        .role-helper { background: rgba(46, 204, 113, 0.12); color: #2ecc71; border: 1px solid rgba(46,204,113,0.25); }
+        .network-card h3 { font-size: 1.2rem; font-weight: 700; margin-bottom: 8px; }
+        .network-card p { color: var(--text-muted); font-size: 0.85rem; }
+
+        .skills-layout { display: grid; grid-template-columns: 1fr 1fr; gap: 30px; }
+        .skills-box { background: var(--bg-secondary); border: 1px solid var(--panel-border); border-radius: 20px; padding: 40px; }
+        .skills-box h3 { font-size: 1.35rem; font-weight: 700; margin-bottom: 24px; display: flex; align-items: center; gap: 12px; }
+        .skills-box h3 i { color: var(--accent); }
+        .tech-tags { display: flex; flex-wrap: wrap; gap: 10px; }
+        .tech-tag {
+            background: rgba(255,255,255,0.02); border: 1px solid var(--panel-border);
+            padding: 8px 16px; border-radius: 10px; font-family: var(--font-mono); font-size: 0.85rem;
+            display: flex; align-items: center; gap: 8px; transition: all 0.2s;
+        }
+        .tech-tag:hover { border-color: var(--accent); background: rgba(var(--accent-rgb), 0.04); }
+
+        .connect-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 24px; }
+        .connect-card {
+            background: var(--bg-secondary); border: 1px solid var(--panel-border); border-radius: 20px;
+            padding: 30px; display: flex; align-items: center; gap: 20px; text-decoration: none; color: inherit;
+            transition: all 0.3s;
+        }
+        .connect-card:hover { border-color: var(--accent); background: var(--bg-card); }
+        .connect-icon { width: 55px; height: 55px; border-radius: 50%; background: rgba(255,255,255,0.02); display: flex; align-items: center; justify-content: center; font-size: 1.6rem; color: var(--accent); border: 1px solid var(--panel-border); }
+        .connect-details span { display: block; font-family: var(--font-mono); font-size: 0.75rem; color: var(--text-muted); text-transform: uppercase; letter-spacing: 1px; }
+        .connect-details p { font-size: 1.1rem; font-weight: 700; margin-top: 2px; }
+
+        @media (max-width: 1100px) {
+            .hero-container { grid-template-columns: 1fr; }
+            .skills-layout { grid-template-columns: 1fr; }
+            nav { display: none; }
+        }
+    </style>
+</head>
+<body class="theme-red">
+
+    <div class="cyber-bg"></div>
+    <div class="cyber-glow" id="ambient-glow"></div>
+
+    <!-- Control Panel -->
+    <div class="control-panel">
+        <div class="control-group">
+            <button class="theme-btn red active" onclick="setTheme('red', this)"></button>
+            <button class="theme-btn blue" onclick="setTheme('blue', this)"></button>
+            <button class="theme-btn black" onclick="setTheme('black', this)"></button>
+        </div>
+        <div style="width: 1px; background: var(--panel-border); height: 20px;"></div>
+        <div class="control-group">
+            <i class="fa-solid fa-globe" style="font-size: 0.85rem; color: var(--text-muted);"></i>
+            <select class="lang-select" id="langSelect" onchange="changeLanguage(this.value)">
+                <option value="es">ES</option>
+                <option value="en">EN</option>
+                <option value="pt">PT</option>
+            </select>
+        </div>
+    </div>
+
+    <!-- Navigation Header -->
+    <header>
+        <a href="#" class="logo">71x7<span>.</span></a>
+        <nav>
+            <a href="#home" class="active" data-key="n-home">Inicio</a>
+            <a href="#systems" data-key="n-sys">Sistemas</a>
+            <a href="#experience" data-key="n-exp">Redes</a>
+            <a href="#skills" data-key="n-stack">Stack</a>
+            <a href="#connect" data-key="n-contact">Contacto</a>
+        </nav>
+    </header>
+
+    <main>
+        <!-- Hero Section -->
+        <section id="home">
+            <div class="hero-container">
+                <div>
+                    <div class="hero-badge">
+                        <i class="fa-solid fa-bolt-lightning"></i> <span data-key="h-badge">SysAdmin & Bare-Metal Infrastructure Engineer</span>
+                    </div>
+                    <h1 class="hero-title" id="hero-title-node">Optimización Extrema de Rendimiento e <span>Infraestructura</span> de Servidores</h1>
+                    <p class="hero-desc" data-key="h-desc">Ingeniería especializada en despliegue de redes de Minecraft de alta carga sobre Linux Dedicado. SysAdmin experto en contenedores, automatización en redes distribuidas, optimización extrema de JVM y desarrollo de ecosistemas asíncronos en tiempo real.</p>
+                </div>
+                
+                <div class="counter-widget">
+                    <div class="counter-title" data-key="c-title">Tiempo en Producción Activa</div>
+                    <div class="counter-grid">
+                        <div class="counter-block"><div class="num" id="c-years">03</div><div class="lbl" data-key="l-y">Años</div></div>
+                        <div class="counter-block"><div class="num" id="c-days">00</div><div class="lbl" data-key="l-d">Días</div></div>
+                        <div class="counter-block"><div class="num" id="c-hours">00</div><div class="lbl" data-key="l-h">Hrs</div></div>
+                        <div class="counter-block"><div class="num" id="c-secs">00</div><div class="lbl" data-key="l-s">Seg</div></div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Specialized Core Minecraft & SysAdmin Systems -->
+        <section id="systems">
+            <div class="section-header">
+                <p data-key="sys-sub">ARQUITECTURA DE INFRAESTRUCTURA Y SISTEMAS REALS</p>
+                <h2>Ecosistemas, Rendimiento & <span>SysAdmin</span></h2>
+            </div>
+
+            <div class="capabilities-grid">
+                <!-- Low Level Plugins -->
+                <div class="capability-card">
+                    <div class="cap-icon"><i class="fa-solid fa-puzzle-piece"></i></div>
+                    <h3 data-key="cap-p1-t">Creación de Plugins (Java Core)</h3>
+                    <p data-key="cap-p1-d">Desarrollo nativo de software a medida bajo APIs de Spigot, Paper y Velocity. Programación asíncrona avanzada, pooling de hilos eficiente y control estricto de recolección de basura (Garbage Collector).</p>
+                </div>
+
+                <!-- Tuning & Performance -->
+                <div class="capability-card">
+                    <div class="cap-icon"><i class="fa-solid fa-gauge-high"></i></div>
+                    <h3 data-key="cap-p2-t">Optimización de TPS & JVM Tuning</h3>
+                    <p data-key="cap-p2-d">Auditoría profunda de fugas de memoria (Memory Leaks) utilizando volcados de pila (Heap Dumps) y herramientas de análisis como Spark, Timings v2 y YourKit. Configuración quirúrgica de flags de Java Aikar y recolectores de basura de baja latencia como ZGC y G1GC.</p>
+                </div>
+
+                <!-- Linux SysAdmin -->
+                <div class="capability-card">
+                    <div class="cap-icon"><i class="fa-brands fa-linux"></i></div>
+                    <h3 data-key="cap-p3-t">Administración de Sistemas Linux</h3>
+                    <p data-key="cap-p3-d">Gestión avanzada de entornos de servidor robustos en distribuciones Ubuntu Server y Debian. Securización y hardening del sistema operativo, iptables/UFW avanzados, monitoreo de carga del sistema, crontabs automatizados y scripts Bash optimizados.</p>
+                </div>
+
+                <!-- Panels & Container Environments -->
+                <div class="capability-card">
+                    <div class="cap-icon"><i class="fa-solid fa-server"></i></div>
+                    <h3 data-key="cap-p4-t">Orquestación con Pterodactyl</h3>
+                    <p data-key="cap-p4-d">Instalación, mantenimiento y configuración avanzada del panel Pterodactyl y sus nodos virtuales (Wings). Creación y modificación de Eggs de Docker personalizados para un despliegue modular de instancias de servidores.</p>
+                </div>
+
+                <!-- Databases -->
+                <div class="capability-card">
+                    <div class="cap-icon"><i class="fa-solid fa-database"></i></div>
+                    <h3 data-key="cap-p5-t">Bases de Datos Cruzadas Sincronizadas</h3>
+                    <p data-key="cap-p5-d">Diseño de redes sincronizadas mediante Redis In-Memory como bus de datos masivos en tiempo real para evitar la latencia de red de Minecraft, acoplado con clústeres estructurados de MySQL/MariaDB para almacenamiento e histórico persistente.</p>
+                </div>
+
+                <!-- Smart Communication Systems -->
+                <div class="capability-card">
+                    <div class="cap-icon"><i class="fa-brands fa-discord"></i></div>
+                    <h3 data-key="cap-p6-t">Bots Avanzados & Automatizaciones</h3>
+                    <p data-key="cap-p6-d">Ingeniería de bots inteligentes integrados en Discord (Discord.js) y WhatsApp (Business APIs). Sincronización en vivo del estatus de la red de servidores Minecraft, pasarelas de pago automatizadas (Tebex/CraftingStore), logs de seguridad y alertas internas inmediatas de caída de nodos (Uptime monitoring).</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Networks History -->
+        <section id="experience">
+            <div class="section-header">
+                <p data-key="exp-sub">PROYECTOS Y TRAYECTORIA DE PRODUCCIÓN</p>
+                <h2>Historial en <span>Servidores</span></h2>
+            </div>
+
+            <div class="network-grid">
+                <div class="network-card">
+                    <div class="card-top"><i class="fa-solid fa-terminal server-icon-wrapper"></i><span class="role-badge role-owner">Owner</span></div>
+                    <h3>VortexMC</h3><p data-key="srv-vortex">Liderazgo integral, dirección de la infraestructura global del sistema, administración de nodos dedicados bare-metal y arquitectura de red de punta a punta.</p>
+                </div>
+                <div class="network-card">
+                    <div class="card-top"><i class="fa-solid fa-building server-icon-wrapper"></i><span class="role-badge role-dev">Developer</span></div>
+                    <h3>Plexora Solutions</h3><p data-key="srv-plexora">Ingeniero de desarrollo especializado en software de automatización, orquestación de sistemas de datos e integraciones corporativas internas.</p>
+                </div>
+                <div class="network-card">
+                    <div class="card-top"><i class="fa-solid fa-dragon server-icon-wrapper"></i><span class="role-badge role-dev">Developer</span></div>
+                    <h3>LeviathanMC</h3><p data-key="srv-leviathan">Desarrollador de sistemas del núcleo central del servidor, optimización de flujos de paquetes de red y lógica modular escalable para picos masivos de jugadores.</p>
+                </div>
+                <div class="network-card">
+                    <div class="card-top"><i class="fa-solid fa-water server-icon-wrapper"></i><span class="role-badge role-dev">Developer</span></div>
+                    <h3>AquaticMC</h3><p data-key="srv-aquatic">Diseño de APIs personalizadas, refactorización crítica de código legacy y optimización avanzada de queries asíncronas de bases de datos relacionales.</p>
+                </div>
+                <div class="network-card">
+                    <div class="card-top"><i class="fa-solid fa-seedling server-icon-wrapper"></i><span class="role-badge role-dev">Developer</span></div>
+                    <h3>BloomCraft</h3><p data-key="srv-bloom">Implementación técnica de dinámicas de juego personalizadas y automatizaciones completas de backend orientadas a la escalabilidad de la red.</p>
+                </div>
+                <div class="network-card">
+                    <div class="card-top"><i class="fa-solid fa-bolt server-icon-wrapper"></i><span class="role-badge role-dev">Developer</span></div>
+                    <h3>OlympusMC</h3><p data-key="srv-olympus">Mantenimiento preventivo de red, auditorías profundas de rendimiento con Spark y despliegue programado de parches en caliente.</p>
+                </div>
+                <div class="network-card">
+                    <div class="card-top"><i class="fa-solid fa-leaf server-icon-wrapper"></i><span class="role-badge role-dev">Developer</span></div>
+                    <h3>FreshMC</h3><p data-key="srv-fresh">Gestión integral de sistemas limpios, modularización avanzada del backend del proxy del servidor y control estable de flujos de datos.</p>
+                </div>
+                <div class="network-card">
+                    <div class="card-top"><i class="fa-solid fa-cloud-bolt server-icon-wrapper"></i><span class="role-badge role-helper">Helper</span></div>
+                    <h3>RayoMC</h3><p data-key="srv-rayo">Supervisión técnica operativa inicial, moderación directa, filtrado de reportes y soporte preventivo del estado lógico de la red.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Tech Stack Layout -->
+        <section id="skills">
+            <div class="section-header">
+                <p data-key="skills-sub">HERRAMIENTAS DE CONTROL INDUSTRIAL</p>
+                <h2>Tecnologías & <span>Core Stack</span></h2>
+            </div>
+
+            <div class="skills-layout">
+                <div class="skills-box">
+                    <h3 data-key="sk-b1"><i class="fa-solid fa-code"></i> Servidor Core, Plugins & Datos</h3>
+                    <div class="tech-tags">
+                        <div class="tech-tag"><i class="fa-brands fa-java" style="color:#007396;"></i> Java (Spigot, Paper, Purpur)</div>
+                        <div class="tech-tag"><i class="fa-solid fa-network-wired" style="color:#E0A800;"></i> Proxy Redes (Velocity, BungeeCord)</div>
+                        <div class="tech-tag"><i class="fa-brands fa-python" style="color:#3776AB;"></i> Python Core</div>
+                        <div class="tech-tag"><i class="fa-solid fa-database" style="color:#4479A1;"></i> MySQL / MariaDB Clustered</div>
+                        <div class="tech-tag"><i class="fa-solid fa-bolt" style="color:#D82C20;"></i> Redis In-Memory Cache & Pub/Sub</div>
+                        <div class="tech-tag"><i class="fa-solid fa-chart-line" style="color:#F2F4F8;"></i> Spark, Timings & YourKit Profilers</div>
+                    </div>
+                </div>
+
+                <div class="skills-box">
+                    <h3 data-key="sk-b2"><i class="fa-solid fa-server"></i> SysAdmin, Paneles & Bots</h3>
+                    <div class="tech-tags">
+                        <div class="tech-tag"><i class="fa-brands fa-linux" style="color:#FCC624;"></i> Linux System Administration</div>
+                        <div class="tech-tag"><i class="fa-brands fa-ubuntu" style="color:#E95420;"></i> Ubuntu Server / Debian Deployments</div>
+                        <div class="tech-tag"><i class="fa-solid fa-dove" style="color:#33a0ff;"></i> Pterodactyl Panel / Wings Orchestration</div>
+                        <div class="tech-tag"><i class="fa-brands fa-docker" style="color:#2496ED;"></i> Docker Containers & Isolation</div>
+                        <div class="tech-tag"><i class="fa-brands fa-js" style="color:#F7DF1E;"></i> Discord.js & Pycord API Automated Bots</div>
+                        <div class="tech-tag"><i class="fa-brands fa-whatsapp" style="color:#25D366;"></i> WhatsApp Business Automation Systems</div>
+                        <div class="tech-tag"><i class="fa-solid fa-shield-halved" style="color:#FF3333;"></i> DDoS Protection Layers & Hardening</div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Contact Station -->
+        <section id="connect">
+            <div class="section-header">
+                <p data-key="c-sub">INICIAR INTEGRACIÓN DE SISTEMAS</p>
+                <h2>Conexión <span>Directa</span></h2>
+            </div>
+
+            <div class="connect-grid">
+                <div class="connect-card">
+                    <div class="connect-icon"><i class="fa-brands fa-discord"></i></div>
+                    <div class="connect-details">
+                        <span>Discord Secure Identity</span>
+                        <p>71x7.</p>
+                    </div>
+                </div>
+
+                <a href="mailto:tacosalmighty@gmail.com" class="connect-card">
+                    <div class="connect-icon"><i class="fa-solid fa-envelope"></i></div>
+                    <div class="connect-details">
+                        <span>Direct Communication Channel</span>
+                        <p>tacosalmighty@gmail.com</p>
+                    </div>
+                </a>
+            </div>
+        </section>
+    </main>
+
+    <script>
+        const epochStart = new Date("2023-07-18T00:00:00").getTime();
+
+        function syncTimeline() {
+            const delta = new Date().getTime() - epochStart;
+            
+            const msY = 1000 * 60 * 60 * 24 * 365.25;
+            const msD = 1000 * 60 * 60 * 24;
+            const msH = 1000 * 60 * 60;
+            const msS = 1000;
+
+            const years = Math.floor(delta / msY);
+            const days = Math.floor((delta % msY) / msD);
+            const hours = Math.floor((delta % msD) / msH);
+            const seconds = Math.floor((delta % msH) / msS);
+
+            document.getElementById("c-years").innerText = String(years).padStart(2, '0');
+            document.getElementById("c-days").innerText = String(days).padStart(2, '0');
+            document.getElementById("c-hours").innerText = String(hours).padStart(2, '0');
+            document.getElementById("c-secs").innerText = String(seconds).padStart(2, '0');
+        }
+        setInterval(syncTimeline, 1000);
+        syncTimeline();
+
+        function setTheme(theme, btn) {
+            document.body.className = 'theme-' + theme;
+            document.querySelectorAll('.theme-btn').forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+        }
+
+        const i18n = {
+            es: {
+                "n-home": "Inicio", "n-sys": "Sistemas", "n-exp": "Redes", "n-stack": "Stack", "n-contact": "Contacto",
+                "h-badge": "SysAdmin & Bare-Metal Infrastructure Engineer",
+                "h-desc": "Ingeniería especializada en despliegue de redes de Minecraft de alta carga sobre Linux Dedicado. SysAdmin experto en contenedores, automatización en redes distribuidas, optimización extrema de JVM y desarrollo de ecosistemas asíncronos en tiempo real.",
+                "c-title": "Tiempo en Producción Activa", "l-y": "Años", "l-d": "Días", "l-h": "Hrs", "l-s": "Seg",
+                "sys-sub": "ARQUITECTURA DE INFRAESTRUCTURA Y SISTEMAS REALES", "cap-p1-t": "Creación de Plugins (Java Core)",
+                "cap-p1-d": "Desarrollo nativo de software a medida bajo APIs de Spigot, Paper y Velocity. Programación asíncrona avanzada, pooling de hilos eficiente y control estricto de recolección de basura (Garbage Collector).",
+                "cap-p2-t": "Optimización de TPS & JVM Tuning", "cap-p2-d": "Auditoría profunda de fugas de memoria (Memory Leaks) utilizando volcados de pila (Heap Dumps) y herramientas de análisis como Spark, Timings v2 y YourKit. Configuración quirúrgica de flags de Java Aikar y recolectores de basura de baja latencia como ZGC y G1GC.",
+                "cap-p3-t": "Administración de Sistemas Linux", "cap-p3-d": "Gestión avanzada de entornos de servidor robustos en distribuciones Ubuntu Server y Debian. Securización y hardening del sistema operativo, iptables/UFW avanzados, monitoreo de carga del sistema, crontabs automatizados y scripts Bash optimizados.",
+                "cap-p4-t": "Orquestación con Pterodactyl", "cap-p4-d": "Instalación, mantenimiento y configuración avanzada del panel Pterodactyl y sus nodos virtuales (Wings). Creación y modificación de Eggs de Docker personalizados para un despliegue modular de instancias de servidores.",
+                "cap-p5-t": "Bases de Datos Cruzadas Sincronizadas", "cap-p5-d": "Diseño de redes sincronizadas mediante Redis In-Memory como bus de datos masivos en tiempo real para evitar la latencia de red de Minecraft, acoplado con clústeres estructurados de MySQL/MariaDB para almacenamiento e histórico persistente.",
+                "cap-p6-t": "Bots Avanzados & Automatizaciones", "cap-p6-d": "Ingeniería de bots inteligentes integrados en Discord (Discord.js) y WhatsApp (Business APIs). Sincronización en vivo del estatus de la red de servidores Minecraft, pasarelas de pago automatizadas (Tebex/CraftingStore), logs de seguridad y alertas internas inmediatas de caída de nodos (Uptime monitoring).",
+                "exp-sub": "PROYECTOS Y TRAYECTORIA DE PRODUCCIÓN", "sk-b1": "Servidor Core, Plugins & Datos", "sk-b2": "SysAdmin, Paneles & Bots",
+                "srv-vortex": "Liderazgo integral, dirección de la infraestructura global del sistema, administración de nodos dedicados bare-metal y arquitectura de red de punta a punta.",
+                "srv-plexora": "Ingeniero de desarrollo especializado en software de automatización, orquestación de sistemas de datos e integraciones corporativas internas.",
+                "srv-leviathan": "Desarrollador de sistemas del núcleo central del servidor, optimización de flujos de paquetes de red y lógica modular escalable para picos masivos de jugadores.",
+                "srv-aquatic": "Diseño de APIs personalizadas, refactorización crítica de código legacy y optimización avanzada de queries asíncronas de bases de datos relacionales.",
+                "srv-bloom": "Implementación técnica de dinámicas de juego personalizadas y automatizaciones completas de backend orientadas a la escalabilidad de la red.",
+                "srv-olympus": "Mantenimiento preventivo de red, auditorías profundas de rendimiento con Spark y despliegue programado de parches en caliente.",
+                "srv-fresh": "Gestión integral de sistemas limpios, modularización avanzada del backend del proxy del servidor y control estable de flujos de datos.",
+                "srv-rayo": "Supervisión técnica operativa inicial, moderación directa, filtrado de reportes y soporte preventivo del estado lógico de la red.",
+                "skills-sub": "HERRAMIENTAS DE CONTROL INDUSTRIAL", "c-sub": "INICIAR INTEGRACIÓN DE SISTEMAS"
+            },
+            en: {
+                "n-home": "Home", "n-sys": "Infrastructure", "n-exp": "Networks", "n-stack": "Stack", "n-contact": "Connect",
+                "h-badge": "SysAdmin & Bare-Metal Infrastructure Engineer",
+                "h-desc": "Specialized high-throughput infrastructure engineering across distributed Linux nodes. Skilled SysAdmin proficient in virtualization, JVM fine-tuning, system resource allocation, and zero-latency asynchronous background processes.",
+                "c-title": "Active Production Lifecycle", "l-y": "Years", "l-d": "Days", "l-h": "Hrs", "l-s": "Sec",
+                "sys-sub": "INFRASTRUCTURE AND PRODUCTION ARCHITECTURE", "cap-p1-t": "Core Plugin Engineering (Java)",
+                "cap-p1-d": "Custom development leveraging low-level APIs (Spigot, Paper, Velocity). Focused on thread pooling, lockless concurrency structures, and optimal garbage collector layout.",
+                "cap-p2-t": "TPS Optimization & JVM Tuning", "cap-p2-d": "In-depth investigation of structural memory leaks utilizing standalone heap dumps, Spark, Timings v2, and YourKit profilers. Tailoring customized Aikar flags and advanced low-pause GC algorithms (ZGC/G1GC).",
+                "cap-p3-t": "Linux Systems Administration", "cap-p3-d": "Comprehensive management of remote nodes on Ubuntu Server and Debian distributions. Linux OS hardening, iptables/UFW network firewalls, process monitoring, cron orchestration, and custom production Bash scripting.",
+                "cap-p4-t": "Pterodactyl & Node Clustering", "cap-p4-d": "Full provisioning and multi-node scaling of Pterodactyl panels and background execution daemons (Wings). Creating custom Docker container wrappers (Eggs) for resource-isolated execution environments.",
+                "cap-p5-t": "Cross-Network Data Persistence", "cap-p5-d": "Distributed backend architectures utilizing Redis In-Memory pub/sub event channels to bypass live Minecraft state network latency, tied directly into clustered MySQL/MariaDB master-slave instances.",
+                "cap-p6-t": "Intelligent Gateways & Webhooks", "cap-p6-d": "Deploying standalone service applications via Discord.js and WhatsApp Enterprise APIs. Automatic handling of storefront webhooks (Tebex), continuous live cluster metrics, security audit trails, and automatic emergency infrastructure notifications.",
+                "exp-sub": "PRODUCTION WORK HISTORY", "sk-b1": "Server Core, Plugins & Data Layer", "sk-b2": "SysAdmin, Panels & Automation",
+                "srv-vortex": "Full executive project leadership, comprehensive network orchestration, and bare-metal server cluster layout.",
+                "srv-plexora": "Software engineer in charge of corporate tooling, script execution, and business pipeline automation.",
+                "srv-leviathan": "Core framework engineer optimizing low-level performance and network packets on high player-density modules.",
+                "srv-aquatic": "Custom internal API designs and optimization of concurrent asynchronous data pipes.",
+                "srv-bloom": "Deployment of secure backend handlers and unique game architecture built for network scaling.",
+                "srv-olympus": "Runtime profiling, continuous memory optimization, and modular codebase restructuring.",
+                "srv-fresh": "Clean system engineering, background cron service management, and modular infrastructure design.",
+                "srv-rayo": "Initial level structural monitoring, community assistance coordination, and fundamental server operations.",
+                "skills-sub": "INDUSTRIAL CONTROL STACK", "c-sub": "INITIALIZE SYSTEM INTEGRATION"
+            },
+            pt: {
+                "n-home": "Início", "n-sys": "Infraestrutura", "n-exp": "Redes", "n-stack": "Stack", "n-contact": "Contato",
+                "h-badge": "SysAdmin & Bare-Metal Infrastructure Engineer",
+                "h-desc": "Engenharia de infraestrutura especializada no deploy de redes de Minecraft de alta performance sobre servidores Linux dedicados. Expert em conteinerização, otimização crítica de JVM e ecossistemas assíncronos.",
+                "c-title": "Tempo em Produção Ativa", "l-y": "Anos", "l-d": "Dias", "l-h": "Hrs", "l-s": "Seg",
+                "sys-sub": "ARQUITETURA DE INFRAESTRUTURA E SISTEMAS REAIS", "cap-p1-t": "Desenvolvimento de Plugins (Java Core)",
+                "cap-p1-d": "Desenvolvimento de software nativo sob medida com APIs Spigot, Paper e Velocity. Programação assíncrona, gerenciamento de threads e controle fino de Garbage Collection.",
+                "cap-p2-t": "Otimização de TPS & JVM Tuning", "cap-p2-d": "Auditoria de vazamentos de memória (Memory Leaks) via Heap Dumps e profilers como Spark, Timings v2 e YourKit. Configuração cirúrgica de flags do Java Aikar e coletores ZGC/G1GC.",
+                "cap-p3-t": "Administração de Sistemas Linux", "cap-p3-d": "Gestão avançada de servidores remotos em distribuições Ubuntu Server e Debian. Hardening de segurança do OS, firewall iptables/UFW, crontabs e shell scripting em Bash.",
+                "cap-p4-t": "Orquestração com Pterodactyl", "cap-p4-d": "Instalação e escalonamento multi-nó de painéis Pterodactyl e daemons em background (Wings). Customização de Docker Eggs para isolamento estrito de recursos por servidor.",
+                "cap-p5-t": "Bancos de Dados Sincronizados", "cap-p5-d": "Arquitetura distribuída de dados em tempo real via Redis In-Memory pub/sub para anular latência de rede de blocos, integrada a clusters MySQL/MariaDB estáveis.",
+                "cap-p6-t": "Robôs Avançados & Gateways", "cap-p6-d": "Desenvolvimento de daemons automatizados com Discord.js e APIs oficiais do WhatsApp. Logs de auditoria em tempo real, webhooks de lojas (Tebex) e sistemas automatizados de monitoramento de instâncias.",
+                "exp-sub": "HISTÓRICO DE PRODUÇÃO REAL", "sk-b1": "Server Core, Plugins & Camada de Dados", "sk-b2": "SysAdmin, Painéis & Automação",
+                "srv-vortex": "Liderança corporativa completa, arquitetura de rede de servidores e gerenciamento avançado bare-metal.",
+                "srv-plexora": "Desenvolvedor de software focado em automações corporativas e integrações de back-office.",
+                "srv-leviathan": "Engenheiro de core de redes focado em processamento assíncrono sob concorrência extrema.",
+                "srv-aquatic": "Desenvolvimento de APIs modulares e tratamento e otimização de queries relacionais pesadas.",
+                "srv-bloom": "Estruturação de lógica de juego escalável e microsserviços integrados de alta confiabilidade.",
+                "srv-olympus": "Análise contínua de memória (heap dumps), correção de memory leaks e otimização preventiva.",
+                "srv-fresh": "Manutenção técnica de repositórios limpos, automações via cronjobs e monitoramento operacional.",
+                "srv-rayo": "Monitoramento básico de instâncias de rede, suporte técnico inicial e moderação estrutural.",
+                "skills-sub": "STACK DE CONTROLE DE PRODUÇÃO", "c-sub": "INICIAR INTEGRAÇÃO DE SISTEMAS"
+            }
+        };
+
+        function changeLanguage(lang) {
+            document.querySelectorAll('[data-key]').forEach(el => {
+                const k = el.getAttribute('data-key');
+                if (i18n[lang][k]) el.innerText = i18n[lang][k];
+            });
+
+            const node = document.getElementById('hero-title-node');
+            if (lang === 'es') node.innerHTML = "Optimización Extrema de Rendimiento e <span>Infraestructura</span> de Servidores";
+            else if (lang === 'en') node.innerHTML = "High-Throughput Performance Tuning & <span>Infrastructure</span> Architecture";
+            else if (lang === 'pt') node.innerHTML = "Otimização Extrema de Performance e Engenharia de <span>Infraestrutura</span>";
+        }
+
+        document.addEventListener('mousemove', (e) => {
+            const glow = document.getElementById('ambient-glow');
+            glow.style.transform = `translate(${e.clientX - 350}px, ${e.clientY - 350}px)`;
+        });
+    </script>
+</body>
+</html>
