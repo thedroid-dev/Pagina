@@ -1,0 +1,802 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>71x7. | Professional Developer & Systems Administrator</title>
+    <!-- FontAwesome Logos -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;600&family=Poppins:wght@400;600;800&display=swap" rel="stylesheet">
+    
+    <style>
+        :root {
+            --bg-primary: #0a0a0c;
+            --bg-secondary: #121216;
+            --accent: #ff3333; /* Default Red */
+            --accent-rgb: 255, 51, 51;
+            --text-main: #f5f5f7;
+            --text-muted: #8e8e93;
+            --panel-border: rgba(255, 255, 255, 0.08);
+            --glow: rgba(255, 51, 51, 0.2);
+            --font-sans: 'Poppins', sans-serif;
+            --font-mono: 'Fira Code', monospace;
+        }
+
+        /* Color Themes */
+        body.theme-red {
+            --accent: #ff3333;
+            --accent-rgb: 255, 51, 51;
+            --glow: rgba(255, 51, 51, 0.25);
+        }
+        body.theme-blue {
+            --accent: #0076ff;
+            --accent-rgb: 0, 118, 255;
+            --glow: rgba(0, 118, 255, 0.3);
+        }
+        body.theme-black {
+            --accent: #ffffff;
+            --accent-rgb: 255, 255, 255;
+            --glow: rgba(255, 255, 255, 0.15);
+            --text-muted: #aaaaaa;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            scroll-behavior: smooth;
+        }
+
+        body {
+            background-color: var(--bg-primary);
+            color: var(--text-main);
+            font-family: var(--font-sans);
+            overflow-x: hidden;
+            line-height: 1.6;
+        }
+
+        /* Ambient Cyber Grid Background */
+        .cyber-bg {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            z-index: -2;
+            background-linear: linear-gradient(rgba(10,10,12,0.9), rgba(10,10,12,0.95));
+            background-image: 
+                linear-gradient(rgba(255,255,255,0.01) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(255,255,255,0.01) 1px, transparent 1px);
+            background-size: 40px 40px;
+        }
+
+        .cyber-glow {
+            position: fixed;
+            width: 600px;
+            height: 600px;
+            background: radial-gradient(circle, var(--glow) 0%, rgba(0,0,0,0) 70%);
+            top: -200px;
+            right: -200px;
+            z-index: -1;
+            pointer-events: none;
+            transition: background 0.5s ease;
+        }
+
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: var(--bg-primary);
+        }
+        ::-webkit-scrollbar-thumb {
+            background: var(--panel-border);
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: var(--accent);
+        }
+
+        /* Top Controls Sticky Bar */
+        .control-panel {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            z-index: 1000;
+            display: flex;
+            gap: 12px;
+            background: rgba(18, 18, 22, 0.8);
+            padding: 8px 16px;
+            border-radius: 30px;
+            border: 1px solid var(--panel-border);
+            backdrop-filter: blur(12px);
+            box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+        }
+
+        .control-group {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .theme-btn {
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            border: 2px solid transparent;
+            cursor: pointer;
+            transition: transform 0.2s, border-color 0.2s;
+        }
+        .theme-btn:hover {
+            transform: scale(1.2);
+        }
+        .theme-btn.red { background: #ff3333; }
+        .theme-btn.blue { background: #0076ff; }
+        .theme-btn.black { background: #ffffff; }
+        .theme-btn.active { border-color: var(--text-main); }
+
+        .lang-select {
+            background: transparent;
+            color: var(--text-main);
+            border: none;
+            font-family: var(--font-mono);
+            font-size: 0.85rem;
+            cursor: pointer;
+            outline: none;
+            padding: 2px 4px;
+        }
+        .lang-select option {
+            background: var(--bg-secondary);
+            color: #fff;
+        }
+
+        /* Header / Navbar */
+        header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 80px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 40px;
+            z-index: 900;
+            background: linear-gradient(to bottom, var(--bg-primary) 60%, transparent);
+        }
+
+        .logo {
+            font-family: var(--font-mono);
+            font-size: 1.5rem;
+            font-weight: 800;
+            color: var(--text-main);
+            text-decoration: none;
+        }
+        .logo span { color: var(--accent); }
+
+        nav {
+            display: flex;
+            gap: 30px;
+            margin-right: 320px; /* Leave space for controls */
+        }
+        nav a {
+            color: var(--text-muted);
+            text-decoration: none;
+            font-size: 0.95rem;
+            font-weight: 600;
+            transition: color 0.3s;
+        }
+        nav a:hover, nav a.active {
+            color: var(--accent);
+        }
+
+        /* Sections Layout */
+        section {
+            min-height: 100vh;
+            padding: 120px 40px 60px 40px;
+            max-width: 1400px;
+            margin: 0 auto;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        /* Hero Section */
+        .hero-container {
+            display: grid;
+            grid-template-columns: 1.2fr 0.8fr;
+            gap: 40px;
+            align-items: center;
+        }
+
+        .hero-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            background: rgba(var(--accent-rgb), 0.1);
+            border: 1px solid rgba(var(--accent-rgb), 0.3);
+            color: var(--accent);
+            padding: 6px 14px;
+            border-radius: 20px;
+            font-family: var(--font-mono);
+            font-size: 0.85rem;
+            margin-bottom: 20px;
+            width: fit-content;
+        }
+
+        .hero-title {
+            font-size: 4rem;
+            line-height: 1.1;
+            font-weight: 800;
+            margin-bottom: 20px;
+        }
+        .hero-title span {
+            color: var(--accent);
+            text-shadow: 0 0 20px var(--glow);
+        }
+
+        .hero-desc {
+            font-size: 1.1rem;
+            color: var(--text-muted);
+            max-width: 600px;
+            margin-bottom: 40px;
+        }
+
+        /* Real-Time Counter Widget */
+        .counter-widget {
+            background: var(--bg-secondary);
+            border: 1px solid var(--panel-border);
+            border-radius: 16px;
+            padding: 24px;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.4);
+            position: relative;
+            overflow: hidden;
+        }
+        .counter-widget::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 4px;
+            height: 100%;
+            background: var(--accent);
+        }
+        .counter-title {
+            font-family: var(--font-mono);
+            font-size: 0.9rem;
+            color: var(--text-muted);
+            margin-bottom: 16px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+        .counter-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 12px;
+            text-align: center;
+        }
+        .counter-block .num {
+            font-family: var(--font-mono);
+            font-size: 2rem;
+            font-weight: 800;
+            color: var(--text-main);
+        }
+        .counter-block .lbl {
+            font-size: 0.75rem;
+            color: var(--text-muted);
+            text-transform: uppercase;
+        }
+
+        /* Experience Grid (Servers) */
+        .section-header {
+            margin-bottom: 50px;
+        }
+        .section-header h2 {
+            font-size: 2.5rem;
+            font-weight: 800;
+        }
+        .section-header h2 span { color: var(--accent); }
+        .section-header p {
+            color: var(--text-muted);
+            font-family: var(--font-mono);
+        }
+
+        .network-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+            gap: 24px;
+        }
+
+        .network-card {
+            background: var(--bg-secondary);
+            border: 1px solid var(--panel-border);
+            border-radius: 16px;
+            padding: 30px;
+            position: relative;
+            transition: transform 0.3s, border-color 0.3s, box-shadow 0.3s;
+            cursor: default;
+        }
+        .network-card:hover {
+            transform: translateY(-5px);
+            border-color: var(--accent);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5), 0 0 15px var(--glow);
+        }
+
+        .card-top {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 20px;
+        }
+
+        .server-icon-wrapper {
+            width: 55px;
+            height: 55px;
+            border-radius: 12px;
+            background: rgba(255,255,255,0.03);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: 1px solid var(--panel-border);
+            font-size: 1.5rem;
+            color: var(--accent);
+        }
+
+        .role-badge {
+            font-family: var(--font-mono);
+            font-size: 0.75rem;
+            padding: 4px 10px;
+            border-radius: 6px;
+            font-weight: 600;
+            text-transform: uppercase;
+        }
+        .role-dev { background: rgba(0, 118, 255, 0.15); color: #0076ff; border: 1px solid rgba(0,118,255,0.3); }
+        .role-owner { background: rgba(255, 153, 0, 0.15); color: #ff9900; border: 1px solid rgba(255,153,0,0.3); }
+        .role-helper { background: rgba(46, 204, 113, 0.15); color: #2ecc71; border: 1px solid rgba(46,204,113,0.3); }
+
+        .network-card h3 {
+            font-size: 1.3rem;
+            margin-bottom: 8px;
+        }
+        .network-card p {
+            color: var(--text-muted);
+            font-size: 0.9rem;
+        }
+
+        /* Skills & Infra */
+        .skills-layout {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 40px;
+        }
+        .skills-box {
+            background: var(--bg-secondary);
+            border: 1px solid var(--panel-border);
+            border-radius: 16px;
+            padding: 40px;
+        }
+        .skills-box h3 {
+            margin-bottom: 24px;
+            font-size: 1.4rem;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .skills-box h3 i { color: var(--accent); }
+
+        .tech-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
+        }
+        .tech-tag {
+            background: rgba(255,255,255,0.03);
+            border: 1px solid var(--panel-border);
+            padding: 8px 16px;
+            border-radius: 8px;
+            font-family: var(--font-mono);
+            font-size: 0.9rem;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            transition: background 0.2s;
+        }
+        .tech-tag:hover {
+            background: rgba(var(--accent-rgb), 0.05);
+            border-color: var(--accent);
+        }
+
+        /* Contact & Connect */
+        .connect-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 24px;
+        }
+        .connect-card {
+            background: var(--bg-secondary);
+            border: 1px solid var(--panel-border);
+            border-radius: 16px;
+            padding: 30px;
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            text-decoration: none;
+            color: inherit;
+            transition: border-color 0.3s, background 0.3s;
+        }
+        .connect-card:hover {
+            border-color: var(--accent);
+            background: rgba(var(--accent-rgb), 0.02);
+        }
+        .connect-icon {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            background: rgba(255,255,255,0.03);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.8rem;
+            color: var(--accent);
+            border: 1px solid var(--panel-border);
+        }
+        .connect-details span {
+            display: block;
+            font-family: var(--font-mono);
+            font-size: 0.8rem;
+            color: var(--text-muted);
+            text-transform: uppercase;
+        }
+        .connect-details p {
+            font-size: 1.1rem;
+            font-weight: 600;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 1024px) {
+            .hero-container { grid-template-columns: 1fr; }
+            .skills-layout { grid-template-columns: 1fr; }
+            nav { display: none; } /* Mobile simplistic variant */
+        }
+    </style>
+</head>
+<body class="theme-red">
+
+    <div class="cyber-bg"></div>
+    <div class="cyber-glow" id="ambient-glow"></div>
+
+    <!-- Control Station (Theme & Language) -->
+    <div class="control-panel">
+        <div class="control-group">
+            <button class="theme-btn red active" onclick="setTheme('red', this)"></button>
+            <button class="theme-btn blue" onclick="setTheme('blue', this)"></button>
+            <button class="theme-btn black" onclick="setTheme('black', this)"></button>
+        </div>
+        <div style="width: 1px; background: var(--panel-border); margin: 0 4px;"></div>
+        <div class="control-group">
+            <i class="fa-solid fa-globe" style="font-size: 0.85rem; color: var(--text-muted);"></i>
+            <select class="lang-select" id="langSelect" onchange="changeLanguage(this.value)">
+                <option value="es">ES</option>
+                <option value="en">EN</option>
+                <option value="pt">PT</option>
+            </select>
+        </div>
+    </div>
+
+    <!-- Header Navigation -->
+    <header>
+        <a href="#" class="logo">71x7<span>.</span></a>
+        <nav id="nav-links">
+            <a href="#home" class="active" data-key="nav-home">Inicio</a>
+            <a href="#experience" data-key="nav-exp">Trayectoria</a>
+            <a href="#skills" data-key="nav-skills">Tecnologías</a>
+            <a href="#connect" data-key="nav-contact">Contacto</a>
+        </nav>
+    </header>
+
+    <!-- Main Content -->
+    <main>
+        
+        <!-- Hero Section -->
+        <section id="home">
+            <div class="hero-container">
+                <div>
+                    <div class="hero-badge">
+                        <i class="fa-solid fa-terminal"></i> <span data-key="hero-status">Sistemas & Backend Developer</span>
+                    </div>
+                    <h1 class="hero-title" id="hero-heading">Diseñando la arquitectura de los mejores servidores de <span>Minecraft</span></h1>
+                    <p class="hero-desc" data-key="hero-desc">Especialista en optimización crítica de entornos de alto rendimiento, desarrollo de plugins robustos, automatización con Python y administración avanzada de infraestructura bare-metal / VPS.</p>
+                </div>
+                
+                <!-- Live Experience Counter Card -->
+                <div class="counter-widget">
+                    <div class="counter-title" data-key="counter-title">Experiencia en tiempo real</div>
+                    <div class="counter-grid">
+                        <div class="counter-block"><div class="num" id="c-years">03</div><div class="lbl" data-key="lbl-y">Años</div></div>
+                        <div class="counter-block"><div class="num" id="c-days">00</div><div class="lbl" data-key="lbl-d">Días</div></div>
+                        <div class="counter-block"><div class="num" id="c-hours">00</div><div class="lbl" data-key="lbl-h">Hrs</div></div>
+                        <div class="counter-block"><div class="num" id="c-secs">00</div><div class="lbl" data-key="lbl-s">Seg</div></div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Experience Section -->
+        <section id="experience">
+            <div class="section-header">
+                <p data-key="exp-sub">HISTORIAL EMPRESARIAL Y REDES</p>
+                <h2>Servidores & <span>Proyectos</span></h2>
+            </div>
+            
+            <div class="network-grid">
+                <!-- VortexMC -->
+                <div class="network-card">
+                    <div class="card-top">
+                        <div class="server-icon-wrapper"><i class="fa-solid fa-server"></i></div>
+                        <span class="role-badge role-owner">Owner</span>
+                    </div>
+                    <h3>VortexMC</h3>
+                    <p data-key="srv-vortex">Liderazgo general del proyecto, dirección de infraestructura, administración de sistemas y diseño técnico global del entorno de red.</p>
+                </div>
+
+                <!-- Plexora Solutions -->
+                <div class="network-card">
+                    <div class="card-top">
+                        <div class="server-icon-wrapper"><i class="fa-solid fa-building"></i></div>
+                        <span class="role-badge role-dev">Developer</span>
+                    </div>
+                    <h3>Plexora Solutions</h3>
+                    <p data-key="srv-plexora">Desarrollador de software integrado dentro del equipo corporativo, optimizando soluciones de red y automatizaciones internas.</p>
+                </div>
+
+                <!-- LeviathanMC -->
+                <div class="network-card">
+                    <div class="card-top">
+                        <div class="server-icon-wrapper"><i class="fa-solid fa-dragon"></i></div>
+                        <span class="role-badge role-dev">Developer</span>
+                    </div>
+                    <h3>LeviathanMC</h3>
+                    <p data-key="srv-leviathan">Desarrollo a nivel de núcleo de sistemas de red, API dedicadas y lógica personalizada para modalidades competitivas de alta carga.</p>
+                </div>
+
+                <!-- AquaticMC -->
+                <div class="network-card">
+                    <div class="card-top">
+                        <div class="server-icon-wrapper"><i class="fa-solid fa-water"></i></div>
+                        <span class="role-badge role-dev">Developer</span>
+                    </div>
+                    <h3>AquaticMC</h3>
+                    <p data-key="srv-aquatic">Implementación y corrección de bugs críticos en sistemas distribuidos, optimización de sincronización y bases de datos dinámicas.</p>
+                </div>
+
+                <!-- BloomCraft -->
+                <div class="network-card">
+                    <div class="card-top">
+                        <div class="server-icon-wrapper"><i class="fa-solid fa-seedling"></i></div>
+                        <span class="role-badge role-dev">Developer</span>
+                    </div>
+                    <h3>BloomCraft</h3>
+                    <p data-key="srv-bloom">Estructuración y despliegue de plugins a medida y sistemas de juego altamente optimizados para la retención del usuario.</p>
+                </div>
+
+                <!-- OlympusMC -->
+                <div class="network-card">
+                    <div class="card-top">
+                        <div class="server-icon-wrapper"><i class="fa-solid fa-bolt"></i></div>
+                        <span class="role-badge role-dev">Developer</span>
+                    </div>
+                    <h3>OlympusMC</h3>
+                    <p data-key="srv-olympus">Mantenimiento preventivo, perfiles de rendimiento y desarrollo de mecánicas exclusivas integradas en el ecosistema corporativo.</p>
+                </div>
+
+                <!-- FreshMC -->
+                <div class="network-card">
+                    <div class="card-top">
+                        <div class="server-icon-wrapper"><i class="fa-solid fa-leaf"></i></div>
+                        <span class="role-badge role-dev">Developer</span>
+                    </div>
+                    <h3>FreshMC</h3>
+                    <p data-key="srv-fresh">Gestión técnica y desarrollo continuo de arquitecturas de red limpias y sistemas de rendimiento optimizados.</p>
+                </div>
+
+                <!-- RayoMC -->
+                <div class="network-card">
+                    <div class="card-top">
+                        <div class="server-icon-wrapper"><i class="fa-solid fa-cloud-bolt"></i></div>
+                        <span class="role-badge role-helper">Helper</span>
+                    </div>
+                    <h3>RayoMC</h3>
+                    <p data-key="srv-rayo">Asistencia técnica inicial, moderación de la comunidad y soporte directo en la gestión operacional del servidor.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Tech & Infrastructure Section -->
+        <section id="skills">
+            <div class="section-header">
+                <p data-key="skills-sub">HABILIDADES TÉCNICAS REELALES</p>
+                <h2>Stack & <span>Infraestructura</span></h2>
+            </div>
+
+            <div class="skills-layout">
+                <div class="skills-box">
+                    <h3 data-key="box-lang"><i class="fa-solid fa-code"></i> Lenguajes & Arquitectura</h3>
+                    <div class="tech-tags">
+                        <div class="tech-tag"><i class="fa-brands fa-python" style="color:#3776AB;"></i> Python</div>
+                        <div class="tech-tag"><i class="fa-brands fa-css3-alt" style="color:#1572B6;"></i> CSS3</div>
+                        <div class="tech-tag"><i class="fa-brands fa-java" style="color:#007396;"></i> Java (Spigot/Paper API)</div>
+                        <div class="tech-tag"><i class="fa-solid fa-database" style="color:#00758F;"></i> MySQL / SQL/ Redis</div>
+                        <div class="tech-tag"><i class="fa-solid fa-gears"></i> API Development</div>
+                    </div>
+                </div>
+
+                <div class="skills-box">
+                    <h3 data-key="box-infra"><i class="fa-solid fa-network-wired"></i> Entornos & Hosting</h3>
+                    <div class="tech-tags">
+                        <div class="tech-tag"><i class="fa-solid fa-server"></i> VPS (Virtual Private Servers)</div>
+                        <div class="tech-tag"><i class="fa-solid fa-microchip"></i> Dedicated Hosts / Bare-Metal</div>
+                        <div class="tech-tag"><i class="fa-brands fa-linux" style="color:#FCC624;"></i> Linux System Admin</div>
+                        <div class="tech-tag"><i class="fa-brands fa-docker" style="color:#2496ED;"></i> Docker Containers</div>
+                        <div class="tech-tag"><i class="fa-solid fa-shield-halved"></i> DDoS Mitigation & Security</div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Connection / Contact Section -->
+        <section id="connect">
+            <div class="section-header">
+                <p data-key="contact-sub">COMUNICACIÓN DIRECTA</p>
+                <h2>Hablemos de tu <span>Proyecto</span></h2>
+            </div>
+
+            <div class="connect-grid">
+                <!-- Discord -->
+                <div class="connect-card">
+                    <div class="connect-icon"><i class="fa-brands fa-discord"></i></div>
+                    <div class="connect-details">
+                        <span>Discord</span>
+                        <p>71x7.</p>
+                    </div>
+                </div>
+
+                <!-- Gmail -->
+                <a href="mailto:tacosalmighty@gmail.com" class="connect-card">
+                    <div class="connect-icon"><i class="fa-solid fa-envelope"></i></div>
+                    <div class="connect-details">
+                        <span>Email Directo</span>
+                        <p>tacosalmighty@gmail.com</p>
+                    </div>
+                </a>
+            </div>
+        </section>
+    </main>
+
+    <script>
+        // Real-Time Precise 3 Years Counter Setup (without reset)
+        // Hardcoded target date to ensure exact continuous metrics tracking
+        const startExperienceDate = new Date("2023-07-18T00:00:00").getTime();
+
+        function updateCounter() {
+            const now = new Date().getTime();
+            const difference = now - startExperienceDate;
+
+            const msPerSecond = 1000;
+            const msPerMinute = msPerSecond * 60;
+            const msPerHour = msPerMinute * 60;
+            const msPerDay = msPerHour * 24;
+            const msPerYear = msPerDay * 365.25; // Accounting for leap years
+
+            // Absolute calculations from total timeline
+            const years = Math.floor(difference / msPerYear);
+            const days = Math.floor((difference % msPerYear) / msPerDay);
+            const hours = Math.floor((difference % msPerDay) / msPerHour);
+            const seconds = Math.floor((difference % msPerHour) / msPerSecond);
+
+            document.getElementById("c-years").innerText = String(years).padStart(2, '0');
+            document.getElementById("c-days").innerText = String(days).padStart(2, '0');
+            document.getElementById("c-hours").innerText = String(hours).padStart(2, '0');
+            document.getElementById("c-secs").innerText = String(seconds).padStart(2, '0');
+        }
+        setInterval(updateCounter, 1000);
+        updateCounter();
+
+        // Color Theme Switcher Logic
+        function setTheme(themeName, element) {
+            document.body.className = '';
+            document.body.classList.add('theme-' + themeName);
+            
+            document.querySelectorAll('.theme-btn').forEach(btn => btn.classList.remove('active'));
+            element.classList.add('active');
+        }
+
+        // Multilingual Translation Matrix
+        const dictionary = {
+            es: {
+                "nav-home": "Inicio", "nav-exp": "Trayectoria", "nav-skills": "Tecnologías", "nav-contact": "Contacto",
+                "hero-status": "Sistemas & Backend Developer",
+                "hero-title": "Diseñando la arquitectura de los mejores servidores de <span>Minecraft</span>",
+                "hero-desc": "Especialista en optimización crítica de entornos de alto rendimiento, desarrollo de plugins robustos, automatización con Python y administración avanzada de infraestructura bare-metal / VPS.",
+                "counter-title": "Experiencia en tiempo real", "lbl-y": "Años", "lbl-d": "Días", "lbl-h": "Hrs", "lbl-s": "Seg",
+                "exp-sub": "HISTORIAL EMPRESARIAL Y REDES", "srv-vortex": "Liderazgo general del proyecto, dirección de infraestructura, administración de sistemas y diseño técnico global del entorno de red.",
+                "srv-plexora": "Desarrollador de software integrado dentro del equipo corporativo, optimizando soluciones de red y automatizaciones internas.",
+                "srv-leviathan": "Desarrollo a nivel de núcleo de sistemas de red, API dedicadas y lógica personalizada para modalidades competitivas de alta carga.",
+                "srv-aquatic": "Implementación y corrección de bugs críticos en sistemas distribuidos, optimización de sincronización y bases de datos dinámicas.",
+                "srv-bloom": "Estructuración y despliegue de plugins a medida y sistemas de juego altamente optimizados para la retención del usuario.",
+                "srv-olympus": "Mantenimiento preventivo, perfiles de rendimiento y desarrollo de mecánicas exclusivas integradas en el ecosistema corporativo.",
+                "srv-fresh": "Gestión técnica y desarrollo continuo de arquitecturas de red limpias y sistemas de rendimiento optimizados.",
+                "srv-rayo": "Asistencia técnica inicial, moderación de la comunidad y soporte directo en la gestión operacional del servidor.",
+                "skills-sub": "HABILIDADES TÉCNICAS REALES", "box-lang": "Lenguajes & Arquitectura", "box-infra": "Entornos & Hosting",
+                "contact-sub": "COMUNICACIÓN DIRECTA"
+            },
+            en: {
+                "nav-home": "Home", "nav-exp": "Experience", "nav-skills": "Stack", "nav-contact": "Connect",
+                "hero-status": "Systems & Backend Developer",
+                "hero-title": "Architecting high-performance infrastructures for top <span>Minecraft</span> networks",
+                "hero-desc": "Specialist in critical environment optimizations, robust plugin design, automation via Python, and enterprise bare-metal & VPS orchestration.",
+                "counter-title": "Real-time experience counter", "lbl-y": "Years", "lbl-d": "Days", "lbl-h": "Hrs", "lbl-s": "Sec",
+                "exp-sub": "PROFESSIONAL TIMELINE", "srv-vortex": "Full project leadership, network design, systems deployment, and core optimization management.",
+                "srv-plexora": "Software engineer integrated into the corporate workflow, designing custom automations and API solutions.",
+                "srv-leviathan": "Core network infrastructure developer, building high-throughput plugins and internal multi-server tools.",
+                "srv-aquatic": "Systems debugging, database replication orchestration, and custom high-reliability runtime integrations.",
+                "srv-bloom": "Advanced custom development focusing on scalability, clean implementations, and unique gameplay logic.",
+                "srv-olympus": "Performance profiling, code refactoring, and stability optimization under highly active player environments.",
+                "srv-fresh": "Continuous pipeline deployment, backend server health monitoring, and modular architecture engineering.",
+                "srv-rayo": "Technical assistance, network monitoring, and client-facing infrastructure optimization.",
+                "skills-sub": "PRODUCTION READY SKILLS", "box-lang": "Languages & Architecture", "box-infra": "Environments & Infrastructure",
+                "contact-sub": "DIRECT CONNECT"
+            },
+            pt: {
+                "nav-home": "Início", "nav-exp": "Carreira", "nav-skills": "Tecnologias", "nav-contact": "Contato",
+                "hero-status": "Sistemas & Backend Developer",
+                "hero-title": "Arquitetando redes e servidores de alta performance em <span>Minecraft</span>",
+                "hero-desc": "Especialista em otimização crítica de servidores, desenvolvimento avançado de plugins, automação com Python e administração de servidores dedicados e VPS.",
+                "counter-title": "Experiência em tempo real", "lbl-y": "Anos", "lbl-d": "Dias", "lbl-h": "Hrs", "lbl-s": "Seg",
+                "exp-sub": "HISTÓRICO PROFISSIONAL", "srv-vortex": "Liderança geral do projeto, gerenciamento de infraestrutura de rede e administração avançada de sistemas.",
+                "srv-plexora": "Desenvolvedor de software integrado na equipe corporativa, otimizando APIs e automações internas.",
+                "srv-leviathan": "Desenvolvimento core de infraestrutura de rede e sistemas sob medida para alta concorrência.",
+                "srv-aquatic": "Correção de bugs em nível de produção, otimização de banco de dados distribuídos e desempenho de rede.",
+                "srv-bloom": "Engenharia de plugins exclusivos e escaláveis focados na estabilidade global do ambiente.",
+                "srv-olympus": "Análise contínua de performance e desenvolvimento estrutural integrado a redes corporativas.",
+                "srv-fresh": "Gerenciamento técnico, manutenção de código limpo e arquitetura de microsserviços.",
+                "srv-rayo": "Suporte técnico operacional inicial e monitoramento básico do status da rede.",
+                "skills-sub": "HABILIDADES TÉCNICAS", "box-lang": "Linguagens & Arquitetura", "box-infra": "Infraestrutura & Redes",
+                "contact-sub": "CONTATO DIRETO"
+            }
+        };
+
+        function changeLanguage(lang) {
+            const elements = document.querySelectorAll('[data-key]');
+            elements.forEach(el => {
+                const key = el.getAttribute('data-key');
+                if (dictionary[lang][key]) {
+                    el.innerText = dictionary[lang][key];
+                }
+            });
+
+            // Handle special innerHTML elements with inner spans like titles
+            const heading = document.getElementById('hero-heading');
+            if (lang === 'es') {
+                heading.innerHTML = "Diseñando la arquitectura de los mejores servidores de <span>Minecraft</span>";
+            } else if (lang === 'en') {
+                heading.innerHTML = "Architecting high-performance infrastructures for top <span>Minecraft</span> networks";
+            } else if (lang === 'pt') {
+                heading.innerHTML = "Arquitetando redes e servidores de alta performance em <span>Minecraft</span>";
+            }
+        }
+
+        // Smooth interactive background mouse trail glow
+        document.addEventListener('mousemove', (e) => {
+            const glow = document.getElementById('ambient-glow');
+            const x = e.clientX - 300;
+            const y = e.clientY - 300;
+            glow.style.transform = `translate(${x}px, ${y}px)`;
+            glow.style.top = '0px';
+            glow.style.right = '0px';
+        });
+    </script>
+</body>
+</html>
